@@ -9,6 +9,7 @@ LIBDIR = libs
 
 
 # Functions available in all modes:
+DRIVERS_GEN_ = backup_senser mem
 LIBS_GEN_ = osal_uipc
 
 # Functions available in MAIN mode:
