@@ -1,7 +1,7 @@
 # Build all examples
 
 EXAMPLEDIR = examples
-EXAMPLES = android main
+EXAMPLES = android main updater
 
 MAKETARGETS = $(EXAMPLES:%=make_%)
 CLEANTARGETS = $(EXAMPLES:%=clean_%)

@@ -17,6 +17,8 @@ LIBS_MAIN_GEN_ = backup
 
 # Functions available in UPDATER mode:
 LIBS_UPDATER_GEN_ = backup
+LIBS_UPDATER_GEN2 = $(STDLIBS:%=sony%)
+LFLAGS_UPDATER_GEN2 = -nostdlib
 
 # Functions available in ANDROID mode:
 APIS_ANDROID_GEN_ = shell
@@ -28,6 +30,9 @@ APIS = $(APIS_GEN_) $(APIS_GEN$(GEN)) $(APIS_$(MODE)_GEN_) $(APIS_$(MODE)_GEN$(G
 DRIVERS = $(DRIVERS_GEN_) $(DRIVERS_GEN$(GEN)) $(DRIVERS_$(MODE)_GEN_) $(DRIVERS_$(MODE)_GEN$(GEN))
 LIBS = $(LIBS_GEN_) $(LIBS_GEN$(GEN)) $(LIBS_$(MODE)_GEN_) $(LIBS_$(MODE)_GEN$(GEN))
 
+# Sony standard libraries on gen2 devices
+STDLIBS = c crypt dl gcc_s m pthread rt stdc++
+
 # All source files in the main executable
 SOURCES = $(APIS:%=$(PLATFORMDIR)/$(APIDIR)/%.c) $(DRIVERS:%=$(PLATFORMDIR)/$(DRIVERDIR)/%.c) $(CSOURCES) $(CPPOURCES)
 
@@ -38,6 +43,6 @@ CC = arm-linux-gnueabi-gcc
 CXX = arm-linux-gnueabi-g++
 
 # Compiler flags
-DEFS = -DMODE_$(MODE) -DGEN$(GEN) $(APIS:%=-DAPI_%) $(DRIVERS:%=-DDRIVER_%) $(LIBS:%=-DDRIVER_%)
+DEFS = -DMODE_$(MODE) -DGEN$(GEN) $(APIS:%=-DAPI_%) $(DRIVERS:%=-DDRIVER_%) $(subst +,p,$(LIBS:%=-DDRIVER_%))
 WFLAGS = -Wall -Werror -Wundef -pedantic
-LFLAGS = -s
+LFLAGS = -s $(LFLAGS_$(MODE)_GEN$(GEN))
