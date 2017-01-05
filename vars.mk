@@ -13,9 +13,17 @@ DRIVERS_GEN_ = backup_senser mem
 LIBS_GEN_ = osal_uipc
 
 # Functions available in MAIN mode:
+APIS_MAIN_GEN2 = bootloader
+APIS_MAIN_GEN3 = bootloader
+DRIVERS_MAIN_GEN2 = mms_ioc
+DRIVERS_MAIN_GEN3 = nand_ioc
 LIBS_MAIN_GEN_ = backup
 
 # Functions available in UPDATER mode:
+APIS_UPDATER_GEN2 = bootloader
+APIS_UPDATER_GEN3 = bootloader
+DRIVERS_UPDATER_GEN2 = mms_ioc
+DRIVERS_UPDATER_GEN3 = nand_ioc
 LIBS_UPDATER_GEN_ = backup
 LIBS_UPDATER_GEN2 = $(STDLIBS:%=sony%)
 LFLAGS_UPDATER_GEN2 = -nostdlib
