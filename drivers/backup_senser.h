@@ -13,7 +13,7 @@ typedef struct {
     int version[3];
 } backup_senser_version;
 
-int backup_senser_cmd_preset_data_read(int arg, void *data, size_t len);
+int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t len);
 int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status);
 int backup_senser_cmd_ID1(char set_value, char *get_value);
 int backup_senser_cmd_version(backup_senser_version *version);

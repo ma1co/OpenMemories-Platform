@@ -119,9 +119,9 @@ static int backup_senser_sync_msg(int function, int mode, void *data, size_t dat
     return 0;
 }
 
-int backup_senser_cmd_preset_data_read(int arg, void *data, size_t len)
+int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t len)
 {
-    return backup_senser_sync_msg(5, MODE_READ, data, len, 1, arg);
+    return backup_senser_sync_msg(5, MODE_READ, data, len, 1, from_memory);
 }
 
 int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status)
