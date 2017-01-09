@@ -59,9 +59,9 @@ int Backup_read(int id, void *addr)
     return backup_sync_msg(3, 2, id, addr);
 }
 
-int Backup_write(int id, void *addr)
+int Backup_write(int subsystem_id, int id, void *addr)
 {
-    return backup_sync_msg(8, 3, id >> 16, id, addr);
+    return backup_sync_msg(8, 3, subsystem_id, id, addr);
 }
 
 void Backup_sync_all()
