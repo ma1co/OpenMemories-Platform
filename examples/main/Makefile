@@ -10,6 +10,7 @@ MAIN = $(BUILD)/main_gen$(GEN).elf
 .PHONY: all
 all:
 	$(MAKE) main GEN=
+	$(MAKE) main GEN=1
 	$(MAKE) main GEN=2
 	$(MAKE) main GEN=3
 
