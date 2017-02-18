@@ -8,6 +8,9 @@ int shell_exec_async(const char *cmd)
 {
     int errno;
 
+    if (strlen(cmd) > 255)
+        return -1;
+
     char *msg;
     errno = osal_valloc_msg_wait(OSAL_MSG_BOOTIN, (void **) &msg, sizeof(int) + strlen(cmd) + 1, 1);
     if (errno) return errno;
