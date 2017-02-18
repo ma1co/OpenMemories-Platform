@@ -1,5 +1,7 @@
 #pragma once
 
+#define BACKUP_SENSER_PRESET_DATA_MAX_SIZE 0x100000
+
 typedef struct {
     int version;// 16 * ord(data[0xE]) + ord(data[0x24])
     size_t size;
@@ -13,7 +15,10 @@ typedef struct {
     int version[3];
 } backup_senser_version;
 
-int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t len);
-int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status);
+int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t *len);
 int backup_senser_cmd_ID1(char set_value, char *get_value);
+
+#ifndef MODE_ANDROID
+int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status);
 int backup_senser_cmd_version(backup_senser_version *version);
+#endif

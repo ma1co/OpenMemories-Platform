@@ -56,7 +56,7 @@ static int backup_senser_send_msg(struct backup_senser_msg *data)
     return 0;
 }
 
-static int backup_senser_sync_msg(int function, int mode, void *data, size_t data_len, int arg_count, ...)
+static int backup_senser_sync_msg(int function, int mode, void *data, size_t *data_len, int arg_count, ...)
 {
     int errno;
 
@@ -75,15 +75,16 @@ static int backup_senser_sync_msg(int function, int mode, void *data, size_t dat
     int write_data_off = (1 + arg_count) * sizeof(int);
 
     if (mode == MODE_WRITE) {
-        if (write_data_off + data_len < sizeof(msg.data))
-            memcpy(msg.data + write_data_off, data, data_len);
-        msg.data_len = write_data_off + data_len;
+        if (write_data_off + *data_len < sizeof(msg.data))
+            memcpy(msg.data + write_data_off, data, *data_len);
+        msg.data_len = write_data_off + *data_len;
     }
 
     errno = backup_senser_send_msg(&msg);
     if (errno) return errno;
 
-    if (mode == MODE_READ && msg.type == BACKUP_SENSER_TYPE_DONE && msg.res_len == data_len) {
+    if (mode == MODE_READ && msg.type == BACKUP_SENSER_TYPE_DONE && msg.res_len <= *data_len) {
+        *data_len = msg.res_len;
         if (msg.res_ptr) {
             if (data) {
                 errno = mem_read(data, msg.res_ptr, msg.res_len);
@@ -100,7 +101,7 @@ static int backup_senser_sync_msg(int function, int mode, void *data, size_t dat
         }
     } else if (mode == MODE_WRITE && msg.type == BACKUP_SENSER_TYPE_DONE) {
         // nothing to do
-    } else if (mode == MODE_WRITE && msg.type == BACKUP_SENSER_TYPE_WRITE_PTR && msg.res_len == data_len) {
+    } else if (mode == MODE_WRITE && msg.type == BACKUP_SENSER_TYPE_WRITE_PTR && msg.res_len == *data_len) {
         errno = mem_write(msg.res_ptr, data, msg.res_len);
         if (errno) return errno;
 
@@ -119,22 +120,32 @@ static int backup_senser_sync_msg(int function, int mode, void *data, size_t dat
     return 0;
 }
 
-int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t len)
+int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t *len)
 {
     return backup_senser_sync_msg(5, MODE_READ, data, len, 1, from_memory);
 }
 
-int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status)
-{
-    return backup_senser_sync_msg(6, MODE_READ, status, sizeof(backup_senser_preset_data_status), 0);
-}
-
 int backup_senser_cmd_ID1(char set_value, char *get_value)
 {
-    return backup_senser_sync_msg(15, MODE_READ, get_value, sizeof(char), 1, set_value);
+    size_t len = sizeof(char);
+    return backup_senser_sync_msg(15, MODE_READ, get_value, &len, 1, set_value);
+}
+
+#ifndef MODE_ANDROID
+// These functions do not work if /version.txt does not exist. version_file_read calls
+// backupfile_get_file_datasize which sets task_struct->stack to zero (why???), which has weird
+// effects afterwards. Since android runs in a chrooted environment, these two functions are
+// disabled in android mode.
+
+int backup_senser_cmd_preset_data_status(backup_senser_preset_data_status *status)
+{
+    size_t len = sizeof(backup_senser_preset_data_status);
+    return backup_senser_sync_msg(6, MODE_READ, status, &len, 0);
 }
 
 int backup_senser_cmd_version(backup_senser_version *version)
 {
-    return backup_senser_sync_msg(16, MODE_READ, version, sizeof(backup_senser_version), 0);
+    size_t len = sizeof(backup_senser_version);
+    return backup_senser_sync_msg(16, MODE_READ, version, &len, 0);
 }
+#endif
