@@ -16,15 +16,15 @@ LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updat
 OBJS = $(SOURCES:%=$(BUILDDIR)/%.o)
 LIBOBJS = $(LIBS:%=$(BUILDDIR)/$(LIBDIR)/lib%.so)
 
-$(BUILDDIR)/$(LIBDIR)/lib%.so: $(BUILDDIR)/$(PLATFORMDIR)/$(DRIVERDIR)/%.c.o
+$(BUILDDIR)/$(LIBDIR)/lib%.so: $(BUILDDIR)/$(PLATFORMDIR)/$(DRIVERDIR)/%.o
 	@mkdir -p $(dir $@)
 	$(CC) -shared $< -o $@
 
-$(BUILDDIR)/%.c.o: %.c
+$(BUILDDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%.cpp.o: %.cpp
+$(BUILDDIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 

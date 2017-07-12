@@ -4,7 +4,7 @@ BUILD = build
 BUILDDIR = $(BUILD)/gen$(GEN)/examples/main
 PLATFORMDIR = ../..
 
-CSOURCES = main.c
+CSOURCES = main
 MAIN = $(BUILD)/main_gen$(GEN).elf
 
 .PHONY: all

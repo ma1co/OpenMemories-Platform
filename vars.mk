@@ -52,7 +52,7 @@ STDLIBS_GEN1 = c crypt dl gcc_s m pthread rt supc++
 STDLIBS_GEN2 = c crypt dl gcc_s m pthread rt stdc++
 
 # All source files in the main executable
-SOURCES = $(APIS:%=$(PLATFORMDIR)/$(APIDIR)/%.c) $(DRIVERS:%=$(PLATFORMDIR)/$(DRIVERDIR)/%.c) $(CSOURCES) $(CPPOURCES)
+SOURCES = $(APIS:%=$(PLATFORMDIR)/$(APIDIR)/%) $(DRIVERS:%=$(PLATFORMDIR)/$(DRIVERDIR)/%) $(CSOURCES) $(CPPSOURCES)
 
 
 # GCC:

@@ -4,7 +4,7 @@ BUILD = build
 BUILDDIR = $(BUILD)/gen$(GEN)/examples/updater
 PLATFORMDIR = ../..
 
-CPPSOURCES = main.cpp
+CPPSOURCES = main
 MAIN = $(BUILD)/libupdaterbody_gen$(GEN).so
 
 .PHONY: all
