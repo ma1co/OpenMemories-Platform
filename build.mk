@@ -35,12 +35,13 @@ $(BUILDDIR)/%.o: %.cpp
 $(BUILDDIR)/$(LIBDIR)/libsony%.so:
 	@mkdir -p $(dir $@)
 	@cp "`$(CC) -print-file-name=lib$*.so`" $@ 2>/dev/null | true
+	@cp "`$(CC) -print-file-name=lib$*.so.0`" $@ 2>/dev/null | true
 	@cp "`$(CC) -print-file-name=lib$*.so.1`" $@ 2>/dev/null | true
-	@cp "`$(CC) -print-file-name=lib$*-2.13.so`" $@ 2>/dev/null | true
+	@cp "`$(CC) -print-file-name=lib$*.so.6`" $@ 2>/dev/null | true
 	sed -i -b -e 's/lib$*.so/\x00ib$*.so/g' $@
 
 # libsupc++ is not available as a shared library, build it from libsupc++.a
 $(BUILDDIR)/$(LIBDIR)/libsonysupc++.so:
-	$(CC) -nostdlib -Wl,--whole-archive -lsupc++ -shared -o $@
+	$(CC) -nodefaultlibs -Wl,--whole-archive -lsupc++ -shared -o $@
 
 -include $(OBJS:%.o=%.d)

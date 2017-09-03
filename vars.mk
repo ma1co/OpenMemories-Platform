@@ -52,11 +52,11 @@ STDLIBS_GEN1 = c crypt dl gcc_s m pthread rt supc++
 STDLIBS_GEN2 = c crypt dl gcc_s m pthread rt stdc++
 
 # All source files in the main executable
-SOURCES = $(APIS:%=$(PLATFORMDIR)/$(APIDIR)/%) $(DRIVERS:%=$(PLATFORMDIR)/$(DRIVERDIR)/%) $(CSOURCES) $(CPPSOURCES)
+SOURCES = $(APIS:%=$(PLATFORMDIR)/$(APIDIR)/%) $(DRIVERS:%=$(PLATFORMDIR)/$(DRIVERDIR)/%) $(CSOURCES) $(CPPSOURCES) $(PLATFORMDIR)/gccstuff
 
 
 # GCC:
-# Get it here: https://launchpad.net/linaro-toolchain-binaries/+milestone/2012.04
+# Get it here: https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/arm-linux-gnueabi/
 CC = arm-linux-gnueabi-gcc
 CXX = arm-linux-gnueabi-g++
 
