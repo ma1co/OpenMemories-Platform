@@ -8,9 +8,9 @@
 
 include $(PLATFORMDIR)/vars.mk
 
-FLAGS = $(DEFS) -I. -I$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections
+FLAGS = $(FLGS) $(DEFS) -I. -I$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections
 CFLAGS = $(FLAGS) -std=c11
-CPPFLAGS = $(FLAGS) -std=c++11 -Wno-vla
+CPPFLAGS = $(FLAGS) -std=c++98 -Wno-vla
 LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updater/exportmap.txt -Wl,-gc-sections
 
 OBJS = $(SOURCES:%=$(BUILDDIR)/%.o)
@@ -43,5 +43,10 @@ $(BUILDDIR)/$(LIBDIR)/libsony%.so:
 # libsupc++ is not available as a shared library, build it from libsupc++.a
 $(BUILDDIR)/$(LIBDIR)/libsonysupc++.so:
 	$(CC) -nodefaultlibs -Wl,--whole-archive -lsupc++ -shared -o $@
+
+$(BUILDDIR)/$(LIBDIR)/libstlport_static.so:
+	@cp $(PLATFORMDIR)/stlport_config.mk $(PLATFORMDIR)/stlport/build/Makefiles/gmake/config.mak
+	$(MAKE) -C $(PLATFORMDIR)/stlport/build/lib -f gcc.mak
+	@cp $(PLATFORMDIR)/stlport/build/lib/obj/arm-linux-gnueabi-gcc/so/libstlport.a $@
 
 -include $(OBJS:%.o=%.d)
