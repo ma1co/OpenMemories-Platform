@@ -8,10 +8,10 @@
 
 include $(PLATFORMDIR)/vars.mk
 
-FLAGS = $(FLGS) $(DEFS) -iquote$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections
+FLAGS = $(FLGS) $(DEFS) -iquote$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections -fno-ident -fmerge-all-constants
 CFLAGS = $(FLAGS) -std=c11
-CPPFLAGS = $(FLAGS) -std=c++98 -Wno-vla
-LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updater/exportmap.txt -Wl,-gc-sections
+CPPFLAGS = $(FLAGS) -std=c++98 -Wno-vla -fno-rtti
+LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updater/exportmap.txt -Wl,-gc-sections -Wl,--build-id=none -Wl,--hash-style=gnu
 
 OBJS = $(SOURCES:%=$(BUILDDIR)/%.o)
 LIBOBJS = $(LIBS:%=$(BUILDDIR)/$(LIBDIR)/lib%.so)
