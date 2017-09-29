@@ -16,21 +16,25 @@ LIBS_GEN2 = osal_uipc
 LIBS_GEN3 = osal_uipc
 
 # Functions available in MAIN mode:
+APIS_MAIN_GEN_ = usbcmd
 APIS_MAIN_GEN2 = bootloader
 APIS_MAIN_GEN3 = bootloader
 DRIVERS_MAIN_GEN2 = mms_ioc
 DRIVERS_MAIN_GEN3 = nand_ioc
+LIBS_MAIN_GEN_ = usbcmd
 LIBS_MAIN_GEN2 = backup
 LIBS_MAIN_GEN3 = backup
 LFLAGS_MAIN_GEN3 = $(STDLIBS:%=-l%)
 
 # Functions available in UPDATER mode:
+APIS_UPDATER_GEN_ = usbcmd
 APIS_UPDATER_GEN1 = bootloader
 APIS_UPDATER_GEN2 = bootloader
 APIS_UPDATER_GEN3 = bootloader
 DRIVERS_UPDATER_GEN1 = mms_ioc
 DRIVERS_UPDATER_GEN2 = mms_ioc
 DRIVERS_UPDATER_GEN3 = nand_ioc
+LIBS_UPDATER_GEN_ = usbcmd
 LIBS_UPDATER_GEN1 = $(filter-out sonystdc++,$(STDLIBS:%=sony%)) sonysupc++ stlport_static
 LIBS_UPDATER_GEN2 = $(STDLIBS:%=sony%) backup
 LIBS_UPDATER_GEN3 = backup
