@@ -8,7 +8,7 @@
 
 include $(PLATFORMDIR)/vars.mk
 
-FLAGS = $(FLGS) $(DEFS) -I. -I$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections
+FLAGS = $(FLGS) $(DEFS) -iquote$(PLATFORMDIR) $(WFLAGS) -MMD -MP -fpic -march=armv5te -Os -ffunction-sections -fdata-sections
 CFLAGS = $(FLAGS) -std=c11
 CPPFLAGS = $(FLAGS) -std=c++98 -Wno-vla
 LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updater/exportmap.txt -Wl,-gc-sections
