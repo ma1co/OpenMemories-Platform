@@ -42,7 +42,7 @@ LIBS_UPDATER_GEN3 = backup
 FLAGS_UPDATER_GEN1 = -isystem$(PLATFORMDIR)/stlport/stlport
 LFLAGS_UPDATER_GEN1 = -nostdlib
 LFLAGS_UPDATER_GEN2 = -nostdlib
-LFLAGS_UPDATER_GEN3 = $(STDLIBS:%=-l%)
+LFLAGS_UPDATER_GEN3 = -nostdlib $(STDLIBS:%=-l%)
 
 # Functions available in ANDROID mode:
 APIS_ANDROID_GEN_ = shell
