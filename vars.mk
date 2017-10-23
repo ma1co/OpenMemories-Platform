@@ -9,7 +9,7 @@ LIBDIR = libs
 
 
 # Functions available in all modes:
-APIS_GEN_ = util
+APIS_GEN_ = properties util
 DRIVERS_GEN_ = mem
 DRIVERS_GEN2 = backup_senser
 DRIVERS_GEN3 = backup_senser
