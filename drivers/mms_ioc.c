@@ -1,6 +1,8 @@
 #include <sys/ioctl.h>
 #include "mms_ioc.h"
 
+const int mms_ioc_bootloader_blocks[MMS_IOC_NUM_BOOTLOADER_BLOCKS] = {0};
+
 int mms_ioc_getblocksize(int fd, int *block_size)
 {
     return ioctl(fd, 0x80046D01, block_size);
