@@ -18,8 +18,8 @@ LIBS_GEN3 = osal_uipc
 
 # Functions available in MAIN mode:
 APIS_MAIN_GEN_ = usbcmd
-APIS_MAIN_GEN2 = bootloader
-APIS_MAIN_GEN3 = bootloader
+APIS_MAIN_GEN2 = backup bootloader
+APIS_MAIN_GEN3 = backup bootloader
 DRIVERS_MAIN_GEN2 = mms_ioc
 DRIVERS_MAIN_GEN3 = nand_ioc
 LIBS_MAIN_GEN_ = usbcmd
@@ -30,8 +30,8 @@ LFLAGS_MAIN_GEN3 = $(STDLIBS:%=-l%)
 # Functions available in UPDATER mode:
 APIS_UPDATER_GEN_ = usbcmd
 APIS_UPDATER_GEN1 = bootloader
-APIS_UPDATER_GEN2 = bootloader
-APIS_UPDATER_GEN3 = bootloader
+APIS_UPDATER_GEN2 = backup bootloader
+APIS_UPDATER_GEN3 = backup bootloader
 DRIVERS_UPDATER_GEN1 = mms_ioc
 DRIVERS_UPDATER_GEN2 = mms_ioc
 DRIVERS_UPDATER_GEN3 = nand_ioc
@@ -45,7 +45,7 @@ LFLAGS_UPDATER_GEN2 = -nostdlib
 LFLAGS_UPDATER_GEN3 = -nostdlib $(STDLIBS:%=-l%)
 
 # Functions available in ANDROID mode:
-APIS_ANDROID_GEN_ = shell
+APIS_ANDROID_GEN_ = backup shell
 DRIVERS_ANDROID_GEN_ = backup backup_senser
 LIBS_ANDROID_GEN_ = osal_uipc
 
