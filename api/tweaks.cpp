@@ -88,7 +88,7 @@ public:
 
 class ProtectionTweak : public Tweak
 {
-protected:
+private:
     void cleanup_android();
 public:
     ProtectionTweak() {}
@@ -227,8 +227,14 @@ void ProtectionTweak::set_enabled(bool enabled)
 #endif
 
     // Since we ignored all errors above, let's check if the call succeeded.
-    if (is_enabled() != enabled)
+    if (is_enabled() != enabled) {
+#ifndef MODE_ANDROID
+        // Try advanced mode for Japanese cameras
+        tweak_protection_advanced().set_enabled(enabled);
+#else
         throw tweak_error("Failed to set backup protection");
+#endif
+    }
 }
 
 string ProtectionTweak::get_string_value()
@@ -282,6 +288,46 @@ SINGLETON(tweak_pal_ntsc_selector, ConstantBackupTweak,
 
 NOARG_SINGLETON(tweak_protection, ProtectionTweak)
 
+#ifndef MODE_ANDROID
+class AdvancedProtectionTweak : public ProtectionTweak
+{
+private:
+    string patch_region(string new_region);
+public:
+    AdvancedProtectionTweak() {}
+    virtual void set_enabled(bool enabled);
+};
+
+string AdvancedProtectionTweak::patch_region(string new_region)
+{
+    vector<char> data = Backup_read_data();
+    char *region = &data[BACKUP_PRESET_DATA_OFFSET_REGION];
+    string old_region = string(region);
+    strcpy(region, new_region.c_str());
+
+    int res = Backup_protect(0, &data[0], data.size());
+    if (res)
+        throw backup_error(string_format("Backup_protect returned %d", res));
+
+    return old_region;
+}
+
+void AdvancedProtectionTweak::set_enabled(bool enabled)
+{
+    Backup_sync_all();
+
+    string region = patch_region("");
+    backup_senser_cmd_ID1(!enabled, NULL);
+    patch_region(region);
+
+    if (is_enabled() != enabled)
+        throw tweak_error("Failed to set backup protection");
+}
+
+NOARG_SINGLETON(tweak_protection_advanced, AdvancedProtectionTweak)
+#else
+UNDEFINED_SINGLETON(tweak_protection_advanced)
+#endif
 #else
 
 UNDEFINED_SINGLETON(tweak_rec_limit)
@@ -289,5 +335,6 @@ UNDEFINED_SINGLETON(tweak_rec_limit_4k)
 UNDEFINED_SINGLETON(tweak_language)
 UNDEFINED_SINGLETON(tweak_pal_ntsc_selector)
 UNDEFINED_SINGLETON(tweak_protection)
+UNDEFINED_SINGLETON(tweak_protection_advanced)
 
 #endif

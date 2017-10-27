@@ -172,22 +172,27 @@ bool Backup_guess_protection()
     }
 }
 
-string Backup_get_region()
+vector<char> Backup_read_data()
 {
     size_t size = BACKUP_SENSER_PRESET_DATA_MAX_SIZE;
-    char buffer[size];
-
-    int res = backup_senser_cmd_preset_data_read(1, buffer, &size);
+    vector<char> data(size);
+    int res = backup_senser_cmd_preset_data_read(1, &data[0], &size);
     if (res)
         throw backup_error(string_format("backup_senser_cmd_preset_data_read returned %d", res));
-    if (size < 0x100)
-        throw backup_error(string_format("Backup preset data too short: %d", size));
+    if (size < 0x100 || size > BACKUP_SENSER_PRESET_DATA_MAX_SIZE)
+        throw backup_error(string_format("Wrong backup data size: %d", size));
+    data.resize(size);
 
-    string version(buffer + BACKUP_PRESET_DATA_OFFSET_VERSION);
+    string version(&data[BACKUP_PRESET_DATA_OFFSET_VERSION]);
     if (version != "BK2" && version != "BK3" && version != "BK4")
         throw backup_error(string_format("Unsupported backup version: %s", version.c_str()));
 
-    return string(buffer + BACKUP_PRESET_DATA_OFFSET_REGION);
+    return data;
+}
+
+string Backup_get_region()
+{
+    return string(&Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_REGION]);
 }
 
 static const char langs_all[BACKUP_NUM_LANGS] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};

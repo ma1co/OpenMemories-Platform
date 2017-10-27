@@ -28,6 +28,7 @@ public:
 };
 
 bool Backup_guess_protection();
+std::vector<char> Backup_read_data();
 std::string Backup_get_region();
 const char *Backup_get_languages_for_region(const char *region);
 

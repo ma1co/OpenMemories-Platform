@@ -23,3 +23,4 @@ Tweak &tweak_rec_limit_4k();
 Tweak &tweak_language();
 Tweak &tweak_pal_ntsc_selector();
 Tweak &tweak_protection();
+Tweak &tweak_protection_advanced();
