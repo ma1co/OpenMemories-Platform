@@ -27,6 +27,21 @@ public:
     virtual void write(std::vector<char>) = 0;
 };
 
+class BaseBackupProperty : public BackupProperty
+{
+protected:
+    const int id;
+    const size_t checked_size;
+public:
+    BaseBackupProperty(int id, size_t checked_size = 0) : id(id), checked_size(checked_size) {}
+    virtual bool exists();
+    virtual bool is_valid();
+    virtual size_t get_size();
+    virtual int get_attr();
+    virtual std::vector<char> read();
+    virtual void write(std::vector<char> value);
+};
+
 bool Backup_guess_protection();
 std::vector<char> Backup_read_data();
 std::string Backup_get_region();

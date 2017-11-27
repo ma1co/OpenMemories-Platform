@@ -22,21 +22,6 @@ extern "C"
 
 using namespace std;
 
-class BaseBackupProperty : public BackupProperty
-{
-protected:
-    const int id;
-    const size_t checked_size;
-public:
-    BaseBackupProperty(int id, size_t checked_size) : id(id), checked_size(checked_size) {}
-    virtual bool exists();
-    virtual bool is_valid();
-    virtual size_t get_size();
-    virtual int get_attr();
-    virtual vector<char> read();
-    virtual void write(vector<char> value);
-};
-
 class CompoundBackupProperty : public BackupProperty
 {
 protected:
@@ -66,7 +51,7 @@ bool BaseBackupProperty::exists()
 
 bool BaseBackupProperty::is_valid()
 {
-    return exists() && get_size() == checked_size;
+    return exists() && (checked_size == 0 || get_size() == checked_size);
 }
 
 size_t BaseBackupProperty::get_size()
