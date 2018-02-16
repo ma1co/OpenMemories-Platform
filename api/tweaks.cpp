@@ -286,6 +286,13 @@ SINGLETON(tweak_pal_ntsc_selector, ConstantBackupTweak,
     vector<char>(1, 1)
 )
 
+SINGLETON(tweak_usb_app_installer, ConstantBackupTweak,
+    bkprop_usb_app_installer(),
+    true,
+    vector<char>(1, 0),
+    vector<char>(1, 1)
+)
+
 NOARG_SINGLETON(tweak_protection, ProtectionTweak)
 
 #ifndef MODE_ANDROID
@@ -334,6 +341,7 @@ UNDEFINED_SINGLETON(tweak_rec_limit)
 UNDEFINED_SINGLETON(tweak_rec_limit_4k)
 UNDEFINED_SINGLETON(tweak_language)
 UNDEFINED_SINGLETON(tweak_pal_ntsc_selector)
+UNDEFINED_SINGLETON(tweak_usb_app_installer)
 UNDEFINED_SINGLETON(tweak_protection)
 UNDEFINED_SINGLETON(tweak_protection_advanced)
 

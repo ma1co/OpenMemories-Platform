@@ -272,3 +272,5 @@ COMPOUND_SINGLETON(bkprop_language,
     BaseBackupProperty(0x010d00b0, 1),
     BaseBackupProperty(0x010d00b1, 1),
 )
+
+BASE_SINGLETON(bkprop_usb_app_installer, 0x01640001, 1)
