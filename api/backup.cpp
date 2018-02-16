@@ -143,18 +143,7 @@ void CompoundBackupProperty::write(vector<char> value)
 
 bool Backup_guess_protection()
 {
-    BaseBackupProperty bkprop_read_only_test = BaseBackupProperty(0x010d008f, 1);
-    if (!bkprop_read_only_test.is_valid())
-        throw backup_error("Backup protection test property not found");
-    if (!(bkprop_read_only_test.get_attr() & BACKUP_ATTR_READ_ONLY))
-        throw backup_error("Backup protection test property not read-only");
-    vector<char> value = bkprop_read_only_test.read();
-    try {
-        bkprop_read_only_test.write(value);
-        return false;
-    } catch (const backup_protected_error &) {
-        return true;
-    }
+    return *(int *) &Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_ID1];
 }
 
 vector<char> Backup_read_data()
