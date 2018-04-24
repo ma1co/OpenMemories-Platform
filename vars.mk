@@ -30,8 +30,8 @@ LFLAGS_MAIN_GEN3 = $(STDLIBS:%=-l%)
 # Functions available in UPDATER mode:
 APIS_UPDATER_GEN_ = usbcmd
 APIS_UPDATER_GEN1 = bootloader
-APIS_UPDATER_GEN2 = backup bootloader
-APIS_UPDATER_GEN3 = backup bootloader
+APIS_UPDATER_GEN2 = android_data_backup backup bootloader
+APIS_UPDATER_GEN3 = android_data_backup backup bootloader
 DRIVERS_UPDATER_GEN1 = mms_ioc
 DRIVERS_UPDATER_GEN2 = mms_ioc
 DRIVERS_UPDATER_GEN3 = nand_ioc
