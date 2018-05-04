@@ -8,11 +8,19 @@
 
 using namespace std;
 
+struct bk_header
+{
+    unsigned short error;
+    unsigned short version;
+    size_t data_size;
+    size_t system_size;
+};
+
 static const int num_bk_files = 2;
 static const char *data_ramdisk = "/dev/ram8";
 static const char *system_ramdisk = "/dev/ram9";
 
-static int read_bk_header(const char *bk_file, struct bk_header *header)
+static int read_bk_header(const char *bk_file, bk_header *header)
 {
     int bk_fd;
     if ((bk_fd = open(bk_file, O_RDONLY)) < 0)
@@ -24,7 +32,7 @@ static int read_bk_header(const char *bk_file, struct bk_header *header)
     return 0;
 }
 
-static int write_bk_header(const char *bk_file, const struct bk_header *header)
+static int write_bk_header(const char *bk_file, const bk_header *header)
 {
     int bk_fd;
     if ((bk_fd = open(bk_file, O_WRONLY | O_SYNC)) < 0)
@@ -58,104 +66,87 @@ static int copy_file(const char *in_file, size_t in_offset, const char *out_file
 
 static int mount_ramdisk(const char *disk_fn, const char *dir)
 {
-    return mount(disk_fn, dir, "ext2", MS_SYNCHRONOUS | MS_DIRSYNC, NULL);
+    return mount(disk_fn, dir, "ext2", MS_SYNCHRONOUS, NULL);
 }
 
-string AndroidDataBackup::get_dir()
+static string get_bk_filename(const char *mount_dir, int id)
 {
-    return dir;
+    return string_format("%s/backup/bk%d.bak", mount_dir, id + 1);
 }
 
-string AndroidDataBackup::get_bk_filename(int id)
+static string get_data_dir(const char *mount_dir)
 {
-    return string_format("%s/backup/bk%d.bak", dir.c_str(), id + 1);
+    return string_format("%s/data", mount_dir);
 }
 
-string AndroidDataBackup::get_data_dir()
+static string get_system_dir(const char *mount_dir)
 {
-    return string_format("%s/data", dir.c_str());
+    return string_format("%s/system", mount_dir);
 }
 
-string AndroidDataBackup::get_system_dir()
+static string android_data_backup_select(const char *mount_dir, bk_header *last_header)
 {
-    return string_format("%s/system", dir.c_str());
-}
+    string last_file = "";
 
-void AndroidDataBackup::initialize()
-{
-    last_id = -1;
     for (int i = 0; i < num_bk_files; i++) {
+        string file = get_bk_filename(mount_dir, i);
         bk_header header;
-        if (!read_bk_header(get_bk_filename(i).c_str(), &header) && !header.error) {
-            if (last_id < 0 || header.version > last_header.version) {
-                last_id = i;
-                last_header = header;
+        if (!read_bk_header(file.c_str(), &header) && !header.error) {
+            if (last_file == "" || header.version > last_header->version) {
+                last_file = file;
+                *last_header = header;
             }
         }
     }
-}
 
-bool AndroidDataBackup::is_available()
-{
-    return last_id >= 0;
-}
-
-void AndroidDataBackup::write_header()
-{
-    if (last_id < 0)
+    if (last_file == "")
         throw android_data_backup_error("Bk file unavailable");
-    if (write_bk_header(get_bk_filename(last_id).c_str(), &last_header))
-        throw android_data_backup_error("Cannot write bk header");
+
+    return last_file;
 }
 
-void AndroidDataBackup::read()
+void android_data_backup_mount(const char *mount_dir)
 {
-    if (last_id < 0)
-        throw android_data_backup_error("Bk file unavailable");
-    const char *bk_file = get_bk_filename(last_id).c_str();
-    if (copy_file(bk_file, sizeof(last_header), data_ramdisk, 0, last_header.data_size, true))
+    bk_header header;
+    const char *bk_file = android_data_backup_select(mount_dir, &header).c_str();
+
+    if (copy_file(bk_file, sizeof(header), data_ramdisk, 0, header.data_size, true))
         throw android_data_backup_error("Cannot read data partition");
-    if (copy_file(bk_file, sizeof(last_header) + last_header.data_size, system_ramdisk, 0, last_header.system_size, true))
+    if (copy_file(bk_file, sizeof(header) + header.data_size, system_ramdisk, 0, header.system_size, true))
         throw android_data_backup_error("Cannot read system partition");
-}
 
-void AndroidDataBackup::write()
-{
-    if (last_id < 0)
-        throw android_data_backup_error("Bk file unavailable");
-    const char *bk_file = get_bk_filename(last_id).c_str();
-    if (copy_file(data_ramdisk, 0, bk_file, sizeof(last_header), last_header.data_size, false))
-        throw android_data_backup_error("Cannot write data partition");
-    if (copy_file(system_ramdisk, 0, bk_file, sizeof(last_header) + last_header.data_size, last_header.system_size, false))
-        throw android_data_backup_error("Cannot write system partition");
-}
-
-void AndroidDataBackup::commit()
-{
-    if (last_id < 0)
-        throw android_data_backup_error("Bk file unavailable");
-    last_id = (last_id + 1) % num_bk_files;
-    last_header.version++;
-
-    last_header.error = 1;
-    write_header();
-    write();
-    last_header.error = 0;
-    write_header();
-}
-
-void AndroidDataBackup::mount()
-{
-    if (mount_ramdisk(data_ramdisk, get_data_dir().c_str()))
+    if (mount_ramdisk(data_ramdisk, get_data_dir(mount_dir).c_str()))
         throw android_data_backup_error("Cannot mount data partition");
-    if (mount_ramdisk(system_ramdisk, get_system_dir().c_str()))
+    if (mount_ramdisk(system_ramdisk, get_system_dir(mount_dir).c_str()))
         throw android_data_backup_error("Cannot mount system partition");
 }
 
-void AndroidDataBackup::unmount()
+void android_data_backup_unmount(const char *mount_dir, bool commit)
 {
-    if (umount(get_data_dir().c_str()))
+    if (umount(get_data_dir(mount_dir).c_str()))
         throw android_data_backup_error("Cannot unmount data partition");
-    if (umount(get_system_dir().c_str()))
+    if (umount(get_system_dir(mount_dir).c_str()))
         throw android_data_backup_error("Cannot unmount system partition");
+
+    if (commit) {
+        bk_header header;
+        android_data_backup_select(mount_dir, &header);
+
+        const int id = 0;
+        const char *bk_file = get_bk_filename(mount_dir, id).c_str();
+        header.error = 0;
+        header.version = 0;
+
+        if (write_bk_header(bk_file, &header))
+            throw android_data_backup_error("Cannot write header");
+        if (copy_file(data_ramdisk, 0, bk_file, sizeof(header), header.data_size, false))
+            throw android_data_backup_error("Cannot write data partition");
+        if (copy_file(system_ramdisk, 0, bk_file, sizeof(header) + header.data_size, header.system_size, false))
+            throw android_data_backup_error("Cannot write system partition");
+
+        for (int i = 0; i < num_bk_files; i++) {
+            if (i != id)
+                unlink(get_bk_filename(mount_dir, i).c_str());
+        }
+    }
 }
