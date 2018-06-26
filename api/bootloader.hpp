@@ -20,3 +20,5 @@ typedef struct {
 std::vector<bootloader_block> bootloader_get_blocks(int fd);
 std::vector<char> bootloader_read_pages(int fd, bootloader_block &block, size_t page, size_t n);
 std::vector<char> bootloader_read_block(int fd, bootloader_block &block);
+
+std::vector<char> bootloader_read_rom();

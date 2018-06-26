@@ -4,6 +4,8 @@
 
 extern "C"
 {
+    #include "drivers/bootrom.h"
+    #include "drivers/mem.h"
     #include "drivers/mms_ioc.h"
     #include "drivers/nand_ioc.h"
 }
@@ -88,4 +90,12 @@ vector<char> bootloader_read_pages(int fd, bootloader_block &block, size_t page,
 vector<char> bootloader_read_block(int fd, bootloader_block &block)
 {
     return bootloader_read_pages(fd, block, 0, block.num_pages);
+}
+
+vector<char> bootloader_read_rom()
+{
+    vector<char> buffer(BOOTROM_SIZE);
+    if (mem_read(&buffer[0], BOOTROM_BASE, BOOTROM_SIZE))
+        throw bootloader_error("mem_read failed");
+    return buffer;
 }
