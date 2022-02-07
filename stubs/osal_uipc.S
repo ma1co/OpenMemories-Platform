@@ -1,0 +1,23 @@
+#include "stubs.h"
+
+T osal_dynamic_id
+T osal_free_msg
+T osal_get_msg_pri
+T osal_get_uipc_stat
+T osal_msg_size
+T osal_rcv_msg_tmo
+T osal_reg_msg_queue_cb
+T osal_reg_sync_msg_queue_cb
+T osal_set_msg_pri
+T osal_set_msgq_broadcast_mode
+T osal_set_msgq_log_mode
+T osal_set_msgq_rt_mode
+T osal_sig_sem
+T osal_snd_msg
+T osal_snd_sync_direct
+T osal_snd_sync_msg
+T osal_stat_msgq
+T osal_stat_sem
+T osal_unreg_msg_queue_cb
+T osal_valloc_msg_wait
+T osal_wai_sem_tmo

@@ -7,6 +7,8 @@ DRIVERDIR = drivers
 # Libs are drivers which are already present as .so files on the device
 LIBDIR = libs
 
+STUBSDIR = stubs
+
 
 # Functions available in all modes:
 APIS_GEN_ = properties tweaks util

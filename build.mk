@@ -16,7 +16,7 @@ LDFLAGS = -Wl,--no-undefined $(LFLAGS) -Wl,--version-script=$(PLATFORMDIR)/updat
 OBJS = $(SOURCES:%=$(BUILDDIR)/%.o)
 LIBOBJS = $(LIBS:%=$(BUILDDIR)/$(LIBDIR)/lib%.so)
 
-$(BUILDDIR)/$(LIBDIR)/lib%.so: $(BUILDDIR)/$(PLATFORMDIR)/$(DRIVERDIR)/%.o
+$(BUILDDIR)/$(LIBDIR)/lib%.so: $(PLATFORMDIR)/$(STUBSDIR)/%.S $(PLATFORMDIR)/$(STUBSDIR)/stubs.h
 	@mkdir -p $(dir $@)
 	$(CC) -shared $< -o $@
 

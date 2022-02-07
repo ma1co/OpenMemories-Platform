@@ -1,0 +1,9 @@
+#include "stubs.h"
+
+T _ZN8usbcmd_t13FreeDataParamEP19usbcmd_data_param_t
+T _ZN8usbcmd_t14AllocDataParamEv
+T _ZN8usbcmd_t4SendEP19usbcmd_data_param_tPFvPv18USBCMD_CALLBACK_IDS2_jiE
+T _ZN8usbcmd_t6CancelEv
+T _ZN8usbcmd_t7ReceiveEP19usbcmd_data_param_tPFvPv18USBCMD_CALLBACK_IDS2_jiE
+T usbcmd_Create
+T usbcmd_Destroy
