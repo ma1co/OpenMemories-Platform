@@ -120,6 +120,11 @@ static int backup_senser_sync_msg(int function, int mode, void *data, size_t *da
     return 0;
 }
 
+int backup_senser_cmd_preset_data_write(int protect_mode, void *data, size_t *len)
+{
+    return backup_senser_sync_msg(4, MODE_WRITE, data, len, 1, protect_mode);
+}
+
 int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t *len)
 {
     return backup_senser_sync_msg(5, MODE_READ, data, len, 1, from_memory);

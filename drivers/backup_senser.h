@@ -15,6 +15,7 @@ typedef struct {
     int version[3];
 } backup_senser_version;
 
+int backup_senser_cmd_preset_data_write(int protect_mode, void *data, size_t *len);
 int backup_senser_cmd_preset_data_read(int from_memory, void *data, size_t *len);
 int backup_senser_cmd_ID1(char set_value, char *get_value);
 

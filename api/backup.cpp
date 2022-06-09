@@ -154,6 +154,14 @@ vector<char> Backup_read_data()
     return data;
 }
 
+void Backup_write_data(vector<char> data)
+{
+    size_t size = data.size();
+    int res = backup_senser_cmd_preset_data_write(2, &data[0], &size);
+    if (res)
+        throw backup_error(string_format("backup_senser_cmd_preset_data_write returned %d", res));
+}
+
 void Backup_check_header(vector<char> data)
 {
     if (data.size() < 0x100)
