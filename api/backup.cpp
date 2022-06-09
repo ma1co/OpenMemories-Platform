@@ -169,6 +169,11 @@ bool Backup_get_protection()
     return *(int *) &Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_ID1];
 }
 
+void Backup_set_protection(bool enabled)
+{
+    backup_senser_cmd_ID1(enabled, NULL);
+}
+
 static const char langs_all[BACKUP_NUM_LANGS] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static const char langs_ap2[BACKUP_NUM_LANGS] = {1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
 static const char langs_au2[BACKUP_NUM_LANGS] = {1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2};

@@ -219,7 +219,7 @@ void ProtectionTweak::set_enabled(bool enabled)
     // Backup.bin doesn't exist.
     // On Japanese-only cameras (region J1), protection can only be enabled
     // using this method, disabling it is impossible.
-    backup_senser_cmd_ID1(!enabled, NULL);
+    Backup_set_protection(!enabled);
 
 #ifdef MODE_ANDROID
     // On android 2, delete the /android/setting folder again.
@@ -324,7 +324,7 @@ void AdvancedProtectionTweak::set_enabled(bool enabled)
     Backup_sync_all();
 
     string region = patch_region("");
-    backup_senser_cmd_ID1(!enabled, NULL);
+    Backup_set_protection(!enabled);
     patch_region(region);
 
     if (is_enabled() != enabled)
