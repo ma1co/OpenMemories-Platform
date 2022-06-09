@@ -43,6 +43,7 @@ public:
 };
 
 std::vector<char> Backup_read_data();
+void Backup_check_header(std::vector<char> data);
 std::string Backup_get_region();
 bool Backup_get_protection();
 void Backup_set_protection(bool enabled);

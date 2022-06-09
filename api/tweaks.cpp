@@ -308,6 +308,7 @@ public:
 string AdvancedProtectionTweak::patch_region(string new_region)
 {
     vector<char> data = Backup_read_data();
+    Backup_check_header(data);
     char *region = &data[BACKUP_PRESET_DATA_OFFSET_REGION];
     string old_region = string(region);
     strcpy(region, new_region.c_str());

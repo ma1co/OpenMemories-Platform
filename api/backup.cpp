@@ -148,25 +148,33 @@ vector<char> Backup_read_data()
     int res = backup_senser_cmd_preset_data_read(1, &data[0], &size);
     if (res)
         throw backup_error(string_format("backup_senser_cmd_preset_data_read returned %d", res));
-    if (size < 0x100 || size > BACKUP_SENSER_PRESET_DATA_MAX_SIZE)
+    if (size > BACKUP_SENSER_PRESET_DATA_MAX_SIZE)
         throw backup_error(string_format("Wrong backup data size: %d", size));
     data.resize(size);
-
-    string version(&data[BACKUP_PRESET_DATA_OFFSET_VERSION]);
-    if (version != "BK2" && version != "BK3" && version != "BK4")
-        throw backup_error(string_format("Unsupported backup version: %s", version.c_str()));
-
     return data;
+}
+
+void Backup_check_header(vector<char> data)
+{
+    if (data.size() < 0x100)
+        throw backup_error(string_format("Wrong backup data size: %d", data.size()));
+    string version(&data[BACKUP_PRESET_DATA_OFFSET_VERSION]);
+    if (version != "BK2" && version != "BK4")
+        throw backup_error(string_format("Unsupported backup version: %s", version.c_str()));
 }
 
 string Backup_get_region()
 {
-    return string(&Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_REGION]);
+    vector<char> data = Backup_read_data();
+    Backup_check_header(data);
+    return string(&data[BACKUP_PRESET_DATA_OFFSET_REGION]);
 }
 
 bool Backup_get_protection()
 {
-    return *(int *) &Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_ID1];
+    vector<char> data = Backup_read_data();
+    Backup_check_header(data);
+    return *(int *) &data[BACKUP_PRESET_DATA_OFFSET_ID1];
 }
 
 void Backup_set_protection(bool enabled)
