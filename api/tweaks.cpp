@@ -184,7 +184,7 @@ bool ProtectionTweak::is_available()
 
 bool ProtectionTweak::is_enabled()
 {
-    return !Backup_guess_protection();
+    return !Backup_get_protection();
 }
 
 void ProtectionTweak::cleanup_android()

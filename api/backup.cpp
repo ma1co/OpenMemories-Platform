@@ -141,11 +141,6 @@ void CompoundBackupProperty::write(vector<char> value)
     }
 }
 
-bool Backup_guess_protection()
-{
-    return *(int *) &Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_ID1];
-}
-
 vector<char> Backup_read_data()
 {
     size_t size = BACKUP_SENSER_PRESET_DATA_MAX_SIZE;
@@ -167,6 +162,11 @@ vector<char> Backup_read_data()
 string Backup_get_region()
 {
     return string(&Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_REGION]);
+}
+
+bool Backup_get_protection()
+{
+    return *(int *) &Backup_read_data()[BACKUP_PRESET_DATA_OFFSET_ID1];
 }
 
 static const char langs_all[BACKUP_NUM_LANGS] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};

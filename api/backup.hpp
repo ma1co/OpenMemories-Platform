@@ -42,9 +42,9 @@ public:
     virtual void write(std::vector<char> value);
 };
 
-bool Backup_guess_protection();
 std::vector<char> Backup_read_data();
 std::string Backup_get_region();
+bool Backup_get_protection();
 const char *Backup_get_languages_for_region(const char *region);
 
 #define BACKUP_NUM_LANGS 35
